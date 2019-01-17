@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article lang="">
+  <para>&lt;context&gt;</para>
+  <para/>
+  <para>    &lt;sample&gt;</para>
+  <para>        &lt;item value="Кто такая Алиса"/&gt;</para>
+  <para>        &lt;item value="Что такое бот"/&gt;</para>
+  <para>    &lt;/sample&gt;</para>
+  <para/>
+  <para>  &lt;input pattern="* Олды здесь?* *"&gt;</para>
+  <para>    &lt;output value="Наместе"/&gt;</para>
+  <para>  &lt;/input&gt;</para>
+  <para/>
+  <para>    &lt;input pattern="* (привет*|здравствуй*) *"&gt;</para>
+  <para>        &lt;output if="full($UserName)"&gt;</para>
+  <para>            &lt;item value="Привет, $UserName! Рада снова видеть тебя!"/&gt;</para>
+  <para>            &lt;item value="Здравствуй, $UserName! Я уже успела соскучиться..."/&gt;</para>
+  <para>        &lt;/output&gt;</para>
+  <para/>
+  <para>        &lt;context if="empty($UserName)" id="name"&gt;</para>
+  <para>            &lt;output value="Привет! Меня зовут Алиса! А это - демонстрация моего навыка, созданного с помощью платформы zenbot. Как тебя зовут?"/&gt;</para>
+  <para/>
+  <para>            &lt;input pattern="$Text"&gt;</para>
+  <para>                &lt;var name="UserName" value="cap($Text)" scope="user"/&gt;</para>
+  <para>                &lt;output value="Приятно познакомиться, $UserName! Напиши мне что-нибудь."/&gt;</para>
+  <para>                &lt;context/&gt;</para>
+  <para>            &lt;/input&gt;</para>
+  <para>        &lt;/context&gt;</para>
+  <para>    &lt;/input&gt;</para>
+  <para/>
+  <para>    &lt;input pattern="* пока *"&gt;</para>
+  <para>        &lt;var name="end_session" value="javascript: true"/&gt;</para>
+  <para>        &lt;output value="Ну пока, незнакомец!" if="empty($UserName)"/&gt;</para>
+  <para>        &lt;output value="Пока-пока, $UserName!"/&gt;</para>
+  <para>    &lt;/input&gt;</para>
+  <para/>
+  <para>    &lt;input pattern="[* (кто|что) так*] $Text"&gt;</para>
+  <para>        &lt;context id="name" if="empty($UserName)"/&gt;</para>
+  <para/>
+  <para>        &lt;context id="wiki" if="full($UserName)"&gt;</para>
+  <para>            &lt;get url="http://ru.wikipedia.org/w/api.php" var="Wiki"&gt;</para>
+  <para>                &lt;param name="format" value="xml"/&gt;</para>
+  <para>                &lt;param name="action" value="opensearch"/&gt;</para>
+  <para>                &lt;param name="search" value="$Text"/&gt;</para>
+  <para>            &lt;/get&gt;</para>
+  <para/>
+  <para>            &lt;var name="Items" value="javascript: $Wiki['SearchSuggestion']['Section']['Item']" if="full($Wiki)" scope="context"/&gt;</para>
+  <para>            &lt;var name="Result" value="javascript: $Items[Math.floor(Math.random() * $Items.length)]['Description']['content']" if="full($Items)"/&gt;</para>
+  <para/>
+  <para>            &lt;output if="empty($Result)"&gt;</para>
+  <para>                &lt;item value='Я поискала в википедии, но ничего не нашла по запросу "$Text"'/&gt;</para>
+  <para>                &lt;item value="В википедии ничего не нашлось..."/&gt;</para>
+  <para>            &lt;/output&gt;</para>
+  <para/>
+  <para>            &lt;output value="$Result" if="full($Result)"/&gt;</para>
+  <para/>
+  <para>            &lt;input pattern="* (еще|другой вариант) *"/&gt;</para>
+  <para/>
+  <para>            &lt;sample value="Другой вариант"/&gt;</para>
+  <para>        &lt;/context&gt;</para>
+  <para/>
+  <para/>
+  <para>    &lt;/input&gt;</para>
+  <para/>
+  <para>&lt;/context&gt;</para>
+  <para/>
+</article>
